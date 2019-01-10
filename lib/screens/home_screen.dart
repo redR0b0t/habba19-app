@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '🏏APL🏏\nPlayer',
+                          '🏏APL/AFL⚽\nPlayer',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 25.0, color: Colors.white),
                         ),
@@ -107,6 +107,14 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: Container(),
               ),
+              Text(
+                'Upon successful registration, a Registration Email will be sent to the provided email addresses. '
+                    'In case of any queries, please contact the Habba19 Team at the CPRD block\n'
+                    ''
+                    'Acharya Premier League (APL) and Acharya Football League (AFL) are a part of Habba 2019',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white70),
+              )
             ],
           ),
         ),

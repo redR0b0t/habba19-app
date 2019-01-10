@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_flux/flutter_flux.dart';
+import 'package:habba2019/constants.dart';
 import 'package:habba2019/stores/volunteer_store.dart';
 import 'dart:ui';
 import 'dart:async';
@@ -65,6 +66,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                 controller: _scrollController,
                 itemBuilder: (BuildContext context, int i) {
                   int index = i - 1;
+                  // Banner
                   if (i == 0) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -83,7 +85,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                                   fit: BoxFit.scaleDown,
                                   child: Text(
                                     'Acharya Habba',
-                                    style: TextStyle(fontSize: 60.0),
+                                    style: TextStyle(fontSize: kBannerTitleFontSize),
                                   ),
                                 ),
                               ),
@@ -104,7 +106,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                                   fit: BoxFit.scaleDown,
                                   child: Text(
                                     'Volunteer Registration 2019',
-                                    style: TextStyle(fontSize: 30.0),
+                                    style: TextStyle(fontSize: kBannerSubTitleFontSize),
                                   ),
                                 ),
                               ),
@@ -114,6 +116,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                       ),
                     );
                   }
+                  // REGISTER Button
                   if (i > store.renderPipeline.length)
                     return Padding(
                       padding:
@@ -148,6 +151,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                             )),
                       ),
                     );
+                  // RenderWidget
                   if (index == store.valueList.length)
                     return Padding(
                       padding:
@@ -161,7 +165,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                         ),
                       ),
                     );
-
+                  // ValueWidget
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 4.0),
@@ -184,7 +188,7 @@ class VolunteerScreenState extends State<VolunteerScreen>
                               child: Text(
                                 store.valueList[index],
                                 style: TextStyle(
-                                    fontSize: 45.0, fontFamily: 'ProductSans'),
+                                    fontSize: kValueWidgetFontSize, fontFamily: 'ProductSans'),
                               ),
                             ),
                           ],

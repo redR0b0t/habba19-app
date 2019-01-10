@@ -1,4 +1,5 @@
 import 'dart:io';
+
 //import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
@@ -15,6 +16,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 const DESIGNATION = ['STUDENT', 'FACULTY'];
 const APL_CATEGORY = ['BATSMAN', 'BOWLER', 'ALL-ROUNDER'];
+const AFL_CATEGORY = ['GOALKEEPER', 'DEFENDER', 'MIDFIELDER', 'FORWARD'];
 
 class NameFormItem with FormItem<String> {
   NameFormItem() {
@@ -45,7 +47,7 @@ class NameFormItem with FormItem<String> {
 
 class USNFormItem with FormItem<String> {
   USNFormItem() {
-    regex = RegExp('[a-z0-9]{0,12}', caseSensitive: false);
+    regex = RegExp('[A-Za-z]{3}[0-9]{2}[A-Za-z]{4}[0-9]{3}', caseSensitive: false);
   }
 
   @override
@@ -56,7 +58,7 @@ class USNFormItem with FormItem<String> {
   @override
   Widget getWidget(BuildContext context) {
     return stdTextInput(
-        'Enter your AUID', this.setValue, () => this.validation(context));
+        'Enter your AUID', this.setValue, () => this.validation(context), textCapitalization: TextCapitalization.characters);
   }
 
   @override
@@ -115,11 +117,12 @@ class EmailFormItem with FormItem<String> {
 
   @override
   Widget getWidget(BuildContext context) {
-    return stdPrompt('CHOOSE AN EMAIL', () async {
+    return stdPrompt('ACHARYA EMAIL', () async {
       String email = await _handleSignIn(context);
       if (!email.endsWith('acharya.ac.in')) {
         FlushbarHelper.createError(
-            message: 'Select a Acharya Institutes issued email id\nOr contact the habba team at CPRD')
+            message:
+                'Select a Acharya Institutes issued email id\nOr contact the habba team at CPRD')
           ..show(context);
         return;
       }
@@ -178,20 +181,6 @@ class ImageFormItem with FormItem<File> {
           maxHeight: 512,
         );
         if (croppedFile == null) croppedFile = imageFile;
-//        visionImage = FirebaseVisionImage.fromFile(croppedFile);
-
-        // Start Face Detection
-
-//        faces = await faceDetector.detectInImage(visionImage);
-//        if (faces.length != 1) {
-//          FlushbarHelper.createError(
-//              message:
-//                  '${faces.length} faces detected! Needed 1\nTake another picture and try again')
-//            ..animationDuration = Duration(seconds: 2)
-//            ..show(context);
-//          ;
-//          return;
-//        }
         this.value = croppedFile;
 
         APLStoreActions.addImage.call(croppedFile);
@@ -252,6 +241,13 @@ class DesignationFormItem with FormItem<String> {
 }
 
 class CategoryFormItem with FormItem<String> {
+
+  String league = 'APL';
+
+  void setLeague(String league) {
+    this.league = league;
+  }
+
   @override
   void callAction() {
     APLStoreActions.addValue.call(this.getValueWidget());
@@ -259,23 +255,24 @@ class CategoryFormItem with FormItem<String> {
 
   @override
   String getTitle() {
-    return 'Category';
+    return 'Category/Position';
   }
 
   @override
   Widget getWidget(BuildContext context) {
+    List<String> arr = league == 'APL'? APL_CATEGORY: AFL_CATEGORY;
     return stdPrompt(
-      'CHOOSE YOUR CATEGORY',
+      'CHOOSE YOUR CATEGORY/POSITION',
       () {
         Navigator.push(
           context,
           ListModal(
-              options: APL_CATEGORY,
+              options: arr,
               onClick: (int opt) {
-                this.setValue(APL_CATEGORY[opt]);
+                this.setValue(arr[opt]);
                 this.callAction();
               },
-              heading: 'SELECT YOUR CATEGORY'),
+              heading: 'SELECT YOUR CATEGORY/POSITION'),
         );
       },
     );
@@ -342,7 +339,7 @@ class CollegeFormItem with FormItem<String> {
 
   @override
   Widget getWidget(BuildContext context) {
-    return stdPrompt('SELEECT YOUR COLLEGE', () {
+    return stdPrompt('SELECT YOUR COLLEGE', () {
       Navigator.push(
           context,
           ListModal(
@@ -392,6 +389,94 @@ class DepartmentFormItem with FormItem<String> {
                 this.callAction();
               }));
     });
+  }
+
+  @override
+  Widget getValueWidget() {
+    return stdTextBox(this.value);
+  }
+}
+
+class LeagueChoiceFormItem with FormItem<String> {
+
+  CategoryFormItem cfi;
+
+  LeagueChoiceFormItem(this.cfi);
+
+  @override
+  String getTitle() {
+    return 'Registering For';
+  }
+
+  @override
+  void callAction() {
+    APLStoreActions.addValue.call(this.getValueWidget());
+    cfi.setLeague(this.value);
+  }
+
+  @override
+  Widget getWidget(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'AFL OR APL?',
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    this.setValue('AFL');
+                    APLStoreActions.setImageAsset.call('assets/afllogo.png');
+                    this.callAction();
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Text(
+                        'AFL',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              VerticalDivider(
+                color: Colors.black87,
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    this.setValue('APL');
+                    APLStoreActions.setImageAsset.call('assets/apllogo.png');
+                    this.callAction();
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Text(
+                        'APL',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   @override

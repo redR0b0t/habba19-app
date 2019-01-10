@@ -79,6 +79,7 @@ const Map<College, List<String>> DEPARTMENTS = {
   ],
   College.Acharya_Polytechnic: [
     'Aeronautical',
+    'Architecture',
     'Automobile',
     'Apparel Design And Fabrication Tech',
     'Computer Science',
@@ -141,3 +142,7 @@ const Map<College, List<String>> DEPARTMENTS = {
     'Master Degree'
   ]
 };
+
+const double kBannerTitleFontSize = 40.0;
+const double kBannerSubTitleFontSize = 25.0;
+const double kValueWidgetFontSize = 30.0;

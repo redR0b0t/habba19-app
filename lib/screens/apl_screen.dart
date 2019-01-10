@@ -4,6 +4,7 @@ import 'package:flushbar/flushbar_helper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_flux/flutter_flux.dart';
+import 'package:habba2019/constants.dart';
 import 'package:habba2019/stores/apl_store.dart';
 
 class APLScreen extends StatefulWidget {
@@ -217,16 +218,16 @@ class _APLScreenState extends State<APLScreen>
                     fit: BoxFit.scaleDown,
                     child: Text(
                       'Acharya Habba',
-                      style: TextStyle(fontSize: 60.0),
+                      style: TextStyle(fontSize: kBannerTitleFontSize),
                     ),
                   ),
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: Image.asset(
-                      'assets/apllogo.png',
+                      store.bannerImageAsset == ''? 'assets/habbalogo.png': store.bannerImageAsset,
                       scale: 1.5,
                     ),
                   ),
@@ -237,8 +238,8 @@ class _APLScreenState extends State<APLScreen>
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      'APL Registration 2019',
-                      style: TextStyle(fontSize: 30.0),
+                      (store.bannerImageAsset == ''? 'AFL/APL': store.leagueChoiceFormItem.value) + ' Registration 2019',
+                      style: TextStyle(fontSize: kBannerSubTitleFontSize),
                     ),
                   ),
                 ),

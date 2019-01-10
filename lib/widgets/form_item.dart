@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habba2019/constants.dart';
 import 'package:habba2019/stores/volunteer_store.dart';
 
 mixin FormItem<Type> {
@@ -43,18 +44,18 @@ Widget stdTextBox(String val) => FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
         val,
-        style: TextStyle(fontSize: 45.0, fontFamily: 'ProductSans'),
+        style: TextStyle(fontSize: kValueWidgetFontSize, fontFamily: 'ProductSans'),
       ),
     );
 
 Widget stdTextInput(String hint, Function setValue, Function validation,
-        {TextInputType textInputType = TextInputType.text}) =>
+        {TextInputType textInputType = TextInputType.text, TextCapitalization textCapitalization = TextCapitalization.words}) =>
     TextField(
       autofocus: true,
       textInputAction: TextInputAction.next,
       maxLines: 1,
       onSubmitted: validation(),
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: textCapitalization,
       keyboardType: textInputType,
       style: TextStyle(fontSize: 25.0, color: Colors.black87),
       decoration: InputDecoration(

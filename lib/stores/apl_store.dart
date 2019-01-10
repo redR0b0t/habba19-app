@@ -19,11 +19,14 @@ class APLStoreActions {
   static Action<File> addImage = Action<File>();
   static Action<BuildContext> makeRequest = Action<BuildContext>();
   static Action<bool> setLoading = Action<bool>();
+  static Action<String> setImageAsset = Action<String>();
 }
 
 class APLStore extends Store {
   List<FormItem> renderPipeline = [];
   List<int> valuePipeline = [];
+
+  LeagueChoiceFormItem leagueChoiceFormItem ;
   NameFormItem nameFormItem = NameFormItem();
   PhoneNumberFormItem phoneNumberFormItem = PhoneNumberFormItem();
   EmailFormItem emailFormItem = EmailFormItem();
@@ -37,11 +40,14 @@ class APLStore extends Store {
 
   File imageFile;
 
-  bool isLoading;
+  String bannerImageAsset = '';
+
 
   APLStore() {
     collegeFormItem = CollegeFormItem(departmentFormItem);
+    leagueChoiceFormItem =  LeagueChoiceFormItem(categoryFormItem);
     renderPipeline = [
+      leagueChoiceFormItem,
       nameFormItem,
       imageFormItem,
       usnFormItem,
@@ -57,16 +63,22 @@ class APLStore extends Store {
       valuePipeline.add(1);
     });
     triggerOnAction(APLStoreActions.removeValue, (BuildContext context) {
-      if(valuePipeline.length == 0) {
+      if (valuePipeline.length == 0) {
         Navigator.pop(context);
       }
       valuePipeline.removeLast();
+    });
+    triggerOnAction(APLStoreActions.setImageAsset, (String s) {
+      this.bannerImageAsset = s;
     });
     triggerOnAction(APLStoreActions.addImage, (File f) {
       imageFile = f;
     });
     triggerOnAction(APLStoreActions.makeRequest, (BuildContext context) async {
-      const URL2 = 'http://acharyahabba.in/apl/apl_register.php';
+      String URL2;
+      if(leagueChoiceFormItem.value == 'APL')
+        URL2 = 'http://acharyahabba.in/apl/apl_register.php';
+      else URL2 = 'http://acharyahabba.in/apl/afl_register.php';
       var stream =
           http.ByteStream(DelegatingStream.typed(this.imageFile.openRead()));
       var length = await imageFile.length();
@@ -87,7 +99,8 @@ class APLStore extends Store {
         'dept': departmentFormItem.value,
         'usn': usnFormItem.value
       });
-      Flushbar loader = FlushbarHelper.createInformation(message: 'Please Wait. Uploading image')
+      Flushbar loader = FlushbarHelper.createInformation(
+          message: 'Please Wait. Uploading image')
         ..isDismissible = false
         ..show(context);
       var res = await req.send();

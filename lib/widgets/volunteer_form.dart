@@ -46,7 +46,7 @@ class NameFormItem with FormItem<String> {
 
 class USNFormItem with FormItem<String> {
   USNFormItem() {
-    regex = RegExp('[a-z1-9]{0,12}', caseSensitive: false);
+    regex = RegExp('[A-Za-z]{3}[0-9]{2}[A-Za-z]{4}[0-9]{3}', caseSensitive: false);
   }
 
   @override
@@ -63,14 +63,14 @@ class USNFormItem with FormItem<String> {
         style: TextStyle(fontSize: 25.0, color: Colors.black87),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(12.0),
-          hintText: 'Enter your USN',
+          hintText: 'Enter your AUID',
         ),
         onChanged: this.setValue,
       );
 
   @override
   String getTitle() {
-    return 'USN';
+    return 'AUID';
   }
 
   @override
