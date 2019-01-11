@@ -40,14 +40,14 @@ class APLStore extends Store {
 
   File imageFile;
 
-  String bannerImageAsset = '';
+  String bannerImageAsset = 'asset/apllogo.png';
 
 
   APLStore() {
     collegeFormItem = CollegeFormItem(departmentFormItem);
     leagueChoiceFormItem =  LeagueChoiceFormItem(categoryFormItem);
     renderPipeline = [
-      leagueChoiceFormItem,
+//      leagueChoiceFormItem,
       nameFormItem,
       imageFormItem,
       usnFormItem,
@@ -75,10 +75,7 @@ class APLStore extends Store {
       imageFile = f;
     });
     triggerOnAction(APLStoreActions.makeRequest, (BuildContext context) async {
-      String URL2;
-      if(leagueChoiceFormItem.value == 'APL')
-        URL2 = 'http://acharyahabba.in/apl/apl_register.php';
-      else URL2 = 'http://acharyahabba.in/apl/afl_register.php';
+      String URL2 = 'http://acharyahabba.in/apl/apl_register.php';
       var stream =
           http.ByteStream(DelegatingStream.typed(this.imageFile.openRead()));
       var length = await imageFile.length();

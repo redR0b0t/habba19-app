@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:async';
+import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _APLScreenState extends State<APLScreen>
   APLStore store;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final ScrollController _scrollController = ScrollController();
+  Flushbar _flushbar = FlushbarHelper.createError(message: '');
 
   @override
   void initState() {
@@ -26,8 +28,10 @@ class _APLScreenState extends State<APLScreen>
 
   @override
   Widget build(BuildContext context) {
-    Timer(Duration(milliseconds: 100), () =>
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
+    Timer(
+        Duration(milliseconds: 100),
+        () => _scrollController
+            .jumpTo(_scrollController.position.maxScrollExtent));
 //    if(_scrollController.hasClients) {
 //      _scrollController.animateTo(_scrollController.position.maxScrollExtent , duration: Duration(milliseconds: 100), curve: Curves.easeOut);
 //    }
@@ -97,10 +101,12 @@ class _APLScreenState extends State<APLScreen>
                         store.renderPipeline[store.valuePipeline.length]
                             .getValueWidget(),
                       );
-                    } else
-                      FlushbarHelper.createError(
-                        message: 'Enter a valid $title',
-                      )..show(context);
+                    } else {
+                      _flushbar
+                        ..message = 'Enter a valid $title'
+                        ..dismiss()
+                        ..show(context);
+                    }
                   } else
                     APLStoreActions.addValue.call(
                       store.renderPipeline[store.valuePipeline.length]
@@ -147,7 +153,7 @@ class _APLScreenState extends State<APLScreen>
               children: <Widget>[
                 Text(
                   store.renderPipeline[index].getTitle(),
-                  style: TextStyle(fontSize: 20.0, fontFamily: 'ProductSans'),
+                  style: TextStyle(fontSize: 18.0, fontFamily: 'ProductSans'),
                   textAlign: TextAlign.start,
                 ),
                 store.renderPipeline[index].getValueWidget()
@@ -225,9 +231,11 @@ class _APLScreenState extends State<APLScreen>
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: Image.asset(
-                      store.bannerImageAsset == ''? 'assets/habbalogo.png': store.bannerImageAsset,
+//                      store.bannerImageAsset == ''? 'assets/habbalogo.png': store.bannerImageAsset,
+                      'assets/apllogo.png',
                       scale: 1.5,
                     ),
                   ),
@@ -238,7 +246,8 @@ class _APLScreenState extends State<APLScreen>
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      (store.bannerImageAsset == ''? 'AFL/APL': store.leagueChoiceFormItem.value) + ' Registration 2019',
+//                      (store.bannerImageAsset == ''? 'AFL/APL': store.leagueChoiceFormItem.value) + ' Registration 2019',
+                      'APL Registration 2019',
                       style: TextStyle(fontSize: kBannerSubTitleFontSize),
                     ),
                   ),

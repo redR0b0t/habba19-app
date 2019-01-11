@@ -145,4 +145,4 @@ const Map<College, List<String>> DEPARTMENTS = {
 
 const double kBannerTitleFontSize = 40.0;
 const double kBannerSubTitleFontSize = 25.0;
-const double kValueWidgetFontSize = 30.0;
+const double kValueWidgetFontSize = 25.0;

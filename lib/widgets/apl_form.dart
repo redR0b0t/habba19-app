@@ -14,9 +14,9 @@ import 'package:habba2019/models/list_modal.dart';
 import 'package:habba2019/constants.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-const DESIGNATION = ['STUDENT', 'FACULTY'];
-const APL_CATEGORY = ['BATSMAN', 'BOWLER', 'ALL-ROUNDER'];
-const AFL_CATEGORY = ['GOALKEEPER', 'DEFENDER', 'MIDFIELDER', 'FORWARD'];
+const DESIGNATION = ['Student', 'Faculty'];
+const APL_CATEGORY = ['Batsman', 'Bowler', 'All-Rounder'];
+const AFL_CATEGORY = ['GoalKeeper', 'Defender', 'Midfielder', 'Forward'];
 
 class NameFormItem with FormItem<String> {
   NameFormItem() {
@@ -47,7 +47,8 @@ class NameFormItem with FormItem<String> {
 
 class USNFormItem with FormItem<String> {
   USNFormItem() {
-    regex = RegExp('[A-Za-z]{3}[0-9]{2}[A-Za-z]{4}[0-9]{3}', caseSensitive: false);
+    regex =
+        RegExp('[A-Za-z]{3}[0-9]{2}[A-Za-z]{4}[0-9]{3}', caseSensitive: false);
   }
 
   @override
@@ -58,7 +59,8 @@ class USNFormItem with FormItem<String> {
   @override
   Widget getWidget(BuildContext context) {
     return stdTextInput(
-        'Enter your AUID', this.setValue, () => this.validation(context), textCapitalization: TextCapitalization.characters);
+        'Enter your AUID', this.setValue, () => this.validation(context),
+        textCapitalization: TextCapitalization.characters);
   }
 
   @override
@@ -104,6 +106,9 @@ class PhoneNumberFormItem with FormItem<String> {
 }
 
 class EmailFormItem with FormItem<String> {
+  Flushbar flushbar = FlushbarHelper.createError(
+      message:
+          'Select a Acharya Institutes issued email id\nOr contact the habba team at CPRD');
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'email',
@@ -120,10 +125,8 @@ class EmailFormItem with FormItem<String> {
     return stdPrompt('ACHARYA EMAIL', () async {
       String email = await _handleSignIn(context);
       if (!email.endsWith('acharya.ac.in')) {
-        FlushbarHelper.createError(
-            message:
-                'Select a Acharya Institutes issued email id\nOr contact the habba team at CPRD')
-          ..show(context);
+        flushbar.dismiss();
+        flushbar.show(context);
         return;
       }
       this.setValue(email);
@@ -157,6 +160,8 @@ class ImageFormItem with FormItem<File> {
 //  FirebaseVisionImage visionImage;
 //  final FaceDetector faceDetector = FirebaseVision.instance.faceDetector();
 //  List<Face> faces = [];
+  Flushbar _flushbar =
+      FlushbarHelper.createInformation(message: 'Close up potraits ONLY');
 
   @override
   void callAction() {
@@ -170,7 +175,8 @@ class ImageFormItem with FormItem<File> {
 
   @override
   Widget getWidget(BuildContext context) {
-    return stdPrompt('TAKE A PICTURE', () async {
+    return stdPrompt('TAKE A PICTURE (CLOSE UP PORTRAIT)', () async {
+
       File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
       if (imageFile != null) {
         File croppedFile = await ImageCropper.cropImage(
@@ -241,7 +247,6 @@ class DesignationFormItem with FormItem<String> {
 }
 
 class CategoryFormItem with FormItem<String> {
-
   String league = 'APL';
 
   void setLeague(String league) {
@@ -260,7 +265,7 @@ class CategoryFormItem with FormItem<String> {
 
   @override
   Widget getWidget(BuildContext context) {
-    List<String> arr = league == 'APL'? APL_CATEGORY: AFL_CATEGORY;
+    List<String> arr = league == 'APL' ? APL_CATEGORY : AFL_CATEGORY;
     return stdPrompt(
       'CHOOSE YOUR CATEGORY/POSITION',
       () {
@@ -398,7 +403,6 @@ class DepartmentFormItem with FormItem<String> {
 }
 
 class LeagueChoiceFormItem with FormItem<String> {
-
   CategoryFormItem cfi;
 
   LeagueChoiceFormItem(this.cfi);

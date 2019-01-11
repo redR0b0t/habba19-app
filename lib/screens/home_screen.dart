@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          '🏏APL/AFL⚽\nPlayer',
+                          '🏏APL🏏\nPlayer',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 25.0, color: Colors.white),
                         ),

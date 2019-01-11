@@ -1,3 +1,5 @@
+import 'package:flushbar/flushbar.dart';
+import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:habba2019/constants.dart';
 import 'package:habba2019/stores/volunteer_store.dart';
@@ -6,6 +8,7 @@ mixin FormItem<Type> {
   Type value;
   RegExp regex;
   bool valid = false;
+  Flushbar _flushbar = FlushbarHelper.createError(message: '');
 
   void setValue(Type s) {
     if (Type == String && regex != null) {
@@ -20,9 +23,13 @@ mixin FormItem<Type> {
         if (regex.hasMatch(val)) {
           this.setValue(regex.stringMatch(val) as Type);
           this.callAction();
-        } else
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text('Enter a valid ${this.getTitle()}')));
+        } else {
+          _flushbar
+            ..message = 'Enter a valid ${this.getTitle()}'
+            ..dismiss()
+            ..show(context);
+        }
+
       } else {
         this.callAction();
       }
@@ -44,12 +51,14 @@ Widget stdTextBox(String val) => FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
         val,
-        style: TextStyle(fontSize: kValueWidgetFontSize, fontFamily: 'ProductSans'),
+        style: TextStyle(
+            fontSize: kValueWidgetFontSize, fontFamily: 'ProductSans'),
       ),
     );
 
 Widget stdTextInput(String hint, Function setValue, Function validation,
-        {TextInputType textInputType = TextInputType.text, TextCapitalization textCapitalization = TextCapitalization.words}) =>
+        {TextInputType textInputType = TextInputType.text,
+        TextCapitalization textCapitalization = TextCapitalization.words}) =>
     TextField(
       autofocus: true,
       textInputAction: TextInputAction.next,
@@ -61,13 +70,14 @@ Widget stdTextInput(String hint, Function setValue, Function validation,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(12.0),
         hintText: hint,
+
       ),
       onChanged: setValue,
     );
 
 Widget stdPrompt(String val, Function onTap) => GestureDetector(
-  onTap: onTap,
-  child: Row(
+      onTap: onTap,
+      child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
