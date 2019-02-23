@@ -5,7 +5,7 @@ const CATEGORIES = [
   'Intercollegiate Events',
   'Miscellaneous',
   'Literary and Dramatics',
-  'Kannada Vadike',
+  'Acharya Kannada Vedike',
   'Management Events',
   'Design and Digital Arts',
   'Gaming',
@@ -49,6 +49,8 @@ enum College {
   Smt_Nagarathnamma_School_Of_Nursing,
   Acharya_Pre_University_College,
   Acharya_School_Of_Design,
+  Acharya_School_Of_Law,
+  Acharya_College_Of_Education,
   CPRD
 }
 
@@ -70,12 +72,16 @@ const Map<College, List<String>> DEPARTMENTS = {
     'Mechatronics',
     'Mining',
     'Manufacturing Science And Engg',
-    'MTech - Bio Technology',
-    'MTech - Computer Science And Engg',
+    'Master of Business Administration',
+    'Master of Computer Application',
+    'MTech - Cyber Forensics and Information Security',
     'MTech - Computer Networking',
+    'MTech - Computer Science And Engg',
+    'MTech - Power Systems',
+    'MTech - Digital Communication',
     'MTech - Product Design And Manufacturing',
+    'MTech - Bio Technology',
     'MTech - Machine Design',
-    'MTech - Power Systems'
   ],
   College.Acharya_Polytechnic: [
     'Aeronautical',
@@ -92,22 +98,28 @@ const Map<College, List<String>> DEPARTMENTS = {
     'Mining',
   ],
   College.Acharya_Institute_Of_Graduate_Studies: [
+    'B.B.A',
+    'B.B.A International Immersion',
     'B.C.A - Bachelor in Computer Application',
-    'M.C.A - Master in Computer Application',
-    'B.A - Bachelor Of Arts (Journalism/Psychology)',
-    'B.Sc - Electronics',
-    'B.Sc - Physics, Chemistry, Maths',
-    'B.Sc - F.A.D',
-    'M.S - Mass Communication',
+    'Bachelor Of Commerce',
+    'Apparel Design And Fabrication Tech',
+    'Bachelor Of Social Work',
+    'B.A - Bachelor Of Arts',
+    'B.A - Bachelor Of Arts In Journalism',
+    'Bachelor Of Science',
+    'Master Of International Business',
+    'Master Of Finance And Accounting',
+    'Master Of Commerce',
+    'M.Sc - Physics',
     'M.Sc - Chemistry',
+    'M.Sc - Mathematics',
+    'M.Sc - Psychology',
+    'M.Sc - Fashion and Apparel Design',
+    'M.Sc - Electronic Media',
     'M.A - English',
     'M.A - Economics',
-    'M.Sc - Mathematics',
-    'M.Sc - Physics',
-    'English Languages',
-    'Apparel Design And Fabrication Tech',
-    'D.Ed - Diploma In Education',
-    'B.Ed - Bachelor Of Education'
+    'M.A - Journalism And Mass Communication',
+    'Master Of Social Work',
   ],
   College.Acharya_and_BM_Reddy_College_Of_Pharmacy: [
     'D.Pharm',
@@ -140,6 +152,15 @@ const Map<College, List<String>> DEPARTMENTS = {
   College.Acharya_School_Of_Design: [
     'Bachelor Degree',
     'Master Degree'
+  ],
+  College.Acharya_School_Of_Law: [
+    'BBA LLB',
+    'BA LLB',
+    'LLB',
+  ],
+  College.Acharya_College_Of_Education: [
+    'B.Ed',
+    'D.Ed'
   ]
 };
 

@@ -1,5 +1,6 @@
 name: habba2019
 description: Acharya Habba 2019
+version: 1.0.0+1
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -7,23 +8,31 @@ description: Acharya Habba 2019
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.0+1
-
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
-
 dependencies:
+  transformer_page_view:
+  path_parsing:
+  gradient_widgets: ^0.3.1
   flutter:
     sdk: flutter
-  fluro: "^1.3.7"
   flutter_flux: any
-  image_picker: 0.4.10
-  image_cropper: 0.0.9
+  bubble_tab_indicator: ^0.1.4
+#  image_picker: 0.4.10
+#  image_cropper: 0.0.9
+  shared_preferences:
+  flutter_swiper:
+  url_launcher:
+  font_awesome_flutter:
 #  firebase_ml_vision: ^0.2.0+2
   flushbar:
-  google_sign_in: ^3.2.4
+  google_sign_in: 3.2.4
   http:
   http_parser:
+  firebase_messaging: 2.1.0
+  vibrate: 0.0.4
+  cached_network_image: 0.5.1
+  carousel_slider: ^1.0.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -56,6 +65,16 @@ flutter:
     - assets/bg2.jpg
     - assets/habbalogo.png
     - assets/apllogo.png
+    - assets/icon.png
+    - assets/Olympics.png
+    - assets/kaala.png
+    - assets/1stplace.png
+    - assets/3rdplace.png
+    - assets/2ndplace.png
+    - assets/prize.png
+    - assets/nopaw.png
+    - assets/sirfpaw.png
+    - assets/onlypaw.png
 #    - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -74,11 +93,10 @@ flutter:
        fonts:
          - asset: assets/PSR.ttf
          - asset: assets/PSB.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
+     - family: Vetica
+       fonts:
+         - asset: assets/vetica.ttf
+        #         - asset: assets/PSB.ttf
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
