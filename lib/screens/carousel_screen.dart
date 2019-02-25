@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:habba2019/screens/events_screen.dart';
 import 'package:flutter_flux/flutter_flux.dart';
+import 'package:habba2019/screens/search_screen.dart';
 import 'package:vibrate/vibrate.dart';
 import 'package:habba2019/widgets/category_card.dart';
 import 'package:path_parsing/path_parsing.dart';
@@ -99,139 +100,44 @@ class CarouselContainerState extends State<CarouselContainer>
           _buildBackground(context),
           isLoading
               ? Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          )
               : isError
-                  ? Center(
-                      child: RaisedButton(
-                        onPressed: masterFetch,
-                        child: Text('Error. Retry'),
-                      ),
-                    )
-                  : Center(
-                      child: AnimatedBuilder(
-                          animation: controller, builder: _buildCarousel),
-                    ),
+              ? Center(
+            child: RaisedButton(
+              onPressed: masterFetch,
+              child: Text('Error. Retry'),
+            ),
+          )
+              : Center(
+            child: AnimatedBuilder(
+                animation: controller, builder: _buildCarousel),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildCarousel(BuildContext context, Widget child) {
-    return AspectRatio(
-      aspectRatio: 0.85,
-      child: Transform(
-        transform: Matrix4.translationValues(carouselXTranslation.value, 0, 0),
-        child: Opacity(
-          opacity: carouselOpacityTranslation.value,
-          child: Swiper(
-            control: SwiperControl(
-                color: Themex.CustomColors.iconActiveColor.withOpacity(0.7),
-                iconNext: FontAwesomeIcons.angleDoubleRight,
-                iconPrevious: FontAwesomeIcons.angleDoubleLeft),
-            loop: false,
-            outer: true,
-            curve: Curves.linear,
-            onIndexChanged: (int i) async {
-              await Future.delayed(Duration(microseconds: 4000));
-              Vibrate.feedback(FeedbackType.selection);
-            },
-            scale: 0.9,
-            pagination: SwiperPagination(
-              margin: EdgeInsets.all(0.0),
-            ),
-            viewportFraction: 0.85,
-            itemCount: store.masterfetchModel.mainEvents.length + 1,
-            itemBuilder: (BuildContext context, int i) {
-              int index = i - 1;
-              if (i == 0) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 0.0, vertical: 15.0),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Center(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Column(
-                              children: <Widget>[
-                                GradientText(
-                                  'Welcome To\nAcharya Habba\n2019',
-//                            textAlign: TextAlign.center,
-                                  gradient: Gradients.haze,
-                                  shaderRect: Rect.fromLTWH(100, 0, 100, 100),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      shadows: [
-//                            Shadow(
-//                              offset: Offset(10.0, 10.0),
-//                              blurRadius: 3.0,
-//                              color: Color.fromARGB(255, 0, 0, 0),
-//                            ),
-                                        Shadow(
-                                          offset: Offset(5.0, 10.0),
-                                          blurRadius: 20.0,
-                                          color: Colors.black.withOpacity(0.55),
-                                        ),
-                                      ],
-                                      fontSize: 54.0,
-                                      fontFamily: 'ProductSans',
-                                      fontWeight: FontWeight.w800),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(FontAwesomeIcons.instagram, color: Colors.white, ),
-                            onPressed: () async {
-                              await launch('https://www.instagram.com/habba2019/');
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(FontAwesomeIcons.snapchat, color: Colors.white),
-                            onPressed: () async {
-                              await launch('https://www.snapchat.com/add/acharya_habba');
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(FontAwesomeIcons.facebook, color: Colors.white),
-                            onPressed: () async {
-                              await launch('https://www.facebook.com/acharya.ac.in/');
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(FontAwesomeIcons.twitter, color: Colors.white),
-                            onPressed: () async {
-                              await launch('https://twitter.com/acharyahabba');
-                            },
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              }
-              return GestureDetector(
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: InkWell(
                 onTap: () {
                   Navigator.of(context).push(
                     PageRouteBuilder(
-                      opaque: false,
-                      pageBuilder: (BuildContext context, _, __) => Container(
+                      opaque: true,
+                      pageBuilder: (BuildContext context, _, __) =>
+                          Container(
                             color: Colors.white.withOpacity(0.9),
                             child: Padding(
                               padding: EdgeInsets.all(8.0),
-                              child: EventsScreen(
-                                events: store
-                                    .masterfetchModel.mainEvents[index].events,
-                              ),
+                              child: SearchScreen(),
                             ),
                           ),
                       transitionsBuilder:
@@ -242,26 +148,203 @@ class CarouselContainerState extends State<CarouselContainer>
                     ),
                   );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 4.0),
-                  child: CategoryCard(
-                      name:
-                          store.masterfetchModel.mainEvents[index].categoryName,
-                      images: store
-                          .masterfetchModel.mainEvents[index].categoryImages),
+                child: Hero(
+                  tag: 'SEARCH',
+                  child: Material(
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            FontAwesomeIcons.searchengin,
+                            color: Themex.CustomColors.iconInactiveColor,
+                          ),
+                          Text(
+                            'SEARCH EVENTS',
+                            style: TextStyle(
+                              color: Themex.CustomColors.iconInactiveColor,
+                              letterSpacing: 3,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              );
-            },
+              ),
+            ),
           ),
         ),
-      ),
+        AspectRatio(
+          aspectRatio: 0.85,
+          child: Transform(
+            transform:
+            Matrix4.translationValues(carouselXTranslation.value, 0, 0),
+            child: Opacity(
+              opacity: carouselOpacityTranslation.value,
+              child: Swiper(
+                control: SwiperControl(
+                    color: Themex.CustomColors.iconActiveColor.withOpacity(0.7),
+                    iconNext: FontAwesomeIcons.angleDoubleRight,
+                    iconPrevious: FontAwesomeIcons.angleDoubleLeft),
+                loop: false,
+                outer: true,
+                curve: Curves.linear,
+                onIndexChanged: (int i) async {
+                  await Future.delayed(Duration(microseconds: 4000));
+                  Vibrate.feedback(FeedbackType.selection);
+                },
+                scale: 0.9,
+                pagination: SwiperPagination(
+                  margin: EdgeInsets.all(0.0),
+                ),
+                viewportFraction: 0.85,
+                itemCount: store.masterfetchModel.mainEvents.length + 1,
+                itemBuilder: (BuildContext context, int i) {
+                  int index = i - 1;
+                  if (i == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 0.0, vertical: 15.0),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    _buildTitle('Welcome To'),
+                                    _buildTitle('Acharya Habba'),
+                                    _buildTitle('2019'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    IconButton(
+                                      icon: Icon(
+                                        FontAwesomeIcons.instagram,
+                                        color: Themex
+                                            .CustomColors.iconInactiveColor,
+                                      ),
+                                      onPressed: () async {
+                                        await launch(
+                                            'https://www.instagram.com/habba2019/');
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        FontAwesomeIcons.snapchat,
+                                        color: Themex
+                                            .CustomColors.iconInactiveColor,
+                                      ),
+                                      onPressed: () async {
+                                        await launch(
+                                            'https://www.snapchat.com/add/acharya_habba');
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        FontAwesomeIcons.facebook,
+                                        color: Themex
+                                            .CustomColors.iconInactiveColor,
+                                      ),
+                                      onPressed: () async {
+                                        await launch(
+                                            'https://www.facebook.com/acharya.ac.in/');
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        FontAwesomeIcons.twitter,
+                                        color: Themex
+                                            .CustomColors.iconInactiveColor,
+                                      ),
+                                      onPressed: () async {
+                                        await launch(
+                                            'https://twitter.com/acharyahabba');
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (BuildContext context, _, __) =>
+                              Container(
+                                color: Colors.white.withOpacity(0.9),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: EventsScreen(
+                                    events: store.masterfetchModel
+                                        .mainEvents[index].events,
+                                  ),
+                                ),
+                              ),
+                          transitionsBuilder: (_, Animation<double> animation,
+                              __, Widget child) {
+                            return new FadeTransition(
+                                opacity: animation, child: child);
+                          },
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 4.0),
+                      child: CategoryCard(
+                          name: store
+                              .masterfetchModel.mainEvents[index].categoryName,
+                          images: store.masterfetchModel.mainEvents[index]
+                              .categoryImages),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(),
+        ),
+      ],
     );
   }
 
   Widget _buildBackground(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double height = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Positioned(
 //      left: -200,
@@ -272,6 +355,34 @@ class CarouselContainerState extends State<CarouselContainer>
         'assets/kaala.png',
         fit: BoxFit.cover,
 //          color: Themex.CustomColors.iconInactiveColor,
+      ),
+    );
+  }
+
+  Widget _buildTitle(String s) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          color: Themex.CustomColors.iconInactiveColor,
+          child: GradientText(
+            s,
+            gradient: Gradients.haze,
+            shaderRect:
+            Rect.fromLTWH(100, 0, 100, 100),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 54.0,
+              fontFamily: 'ProductSans',
+              fontWeight: FontWeight.w700,
+//        background: Paint()
+//          ..color = Themex
+//              .CustomColors.iconInactiveColor,
+            ),
+          ),
+        ),
       ),
     );
   }

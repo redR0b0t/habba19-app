@@ -19,6 +19,32 @@ class MasterfetchModel {
     }
     return data;
   }
+
+  List<Event> _masterList = [];
+
+  List<Event> get masterList {
+    _masterList = [];
+    this.mainEvents.forEach((MainEvents mainEvents) {
+      _masterList.addAll(mainEvents.events);
+    });
+    return _masterList;
+  }
+
+  List<Event> get day1List {
+    return masterList.where((Event e) => DateTime.parse(e.startDate).day == 28).toList();
+  }
+  List<Event> get day2List {
+    return masterList.where((Event e) => DateTime.parse(e.startDate).day == 29).toList();
+  }
+  List<Event> get day3List {
+    return masterList.where((Event e) => DateTime.parse(e.startDate).day == 30).toList();
+  }
+    List<Event> get day0List {
+    return masterList.where((Event e) {
+      int day = DateTime.parse(e.startDate).day;
+      return day != 28 && day != 29 && day != 30;
+    }).toList();
+  }
 }
 
 class MainEvents {
@@ -60,7 +86,8 @@ class Event {
   String description;
   String rules;
   String venue;
-  String date;
+  String startDate;
+  String endDate;
   String fee;
   int organizerId;
   int categoryId;
@@ -69,6 +96,8 @@ class Event {
   String categoryName;
   String categoryImages;
   String prize;
+  String organizerName;
+  String organizerPhone;
   bool isExpanded = false;
 
   Event(
@@ -77,7 +106,8 @@ class Event {
       this.description,
       this.rules,
       this.venue,
-      this.date,
+      this.startDate,
+      this.endDate,
       this.fee,
       this.organizerId,
       this.categoryId,
@@ -85,6 +115,8 @@ class Event {
       this.imgUrl,
       this.categoryName,
       this.categoryImages,
+      this.organizerName,
+      this.organizerPhone,
       this.prize});
 
   Event.fromJson(Map<String, dynamic> json) {
@@ -93,7 +125,8 @@ class Event {
     description = json['description'];
     rules = json['rules'];
     venue = json['venue'];
-    date = json['date'];
+    startDate = json['start_date'];
+    endDate = json['end_date'];
     fee = json['fee'];
     organizerId = json['organizer_id'];
     categoryId = json['category_id'];
@@ -102,6 +135,8 @@ class Event {
     categoryName = json['category_name'];
     categoryImages = json['category_images'];
     prize = json['prize'];
+    organizerPhone = json['organizer_phone'];
+    organizerName = json['organizer_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -111,7 +146,8 @@ class Event {
     data['description'] = this.description;
     data['rules'] = this.rules;
     data['venue'] = this.venue;
-    data['date'] = this.date;
+    data['start_date'] = this.startDate;
+    data['end_date'] = this.endDate;
     data['fee'] = this.fee;
     data['organizer_id'] = this.organizerId;
     data['category_id'] = this.categoryId;
@@ -119,6 +155,8 @@ class Event {
     data['img_url'] = this.imgUrl;
     data['category_name'] = this.categoryName;
     data['category_images'] = this.categoryImages;
+    data['organizer_name'] = this.organizerName;
+    data['organizer_phone'] = this.organizerPhone;
     data['prize'] = this.prize;
     return data;
   }

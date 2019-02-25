@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habba2019/models/masterfetch_model.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flushbar/flushbar.dart';
@@ -10,65 +9,114 @@ import 'package:habba2019/stores/auth_store.dart';
 import 'package:habba2019/stores/event_store.dart';
 import 'package:habba2019/widgets/custom_expansion.dart';
 import 'package:habba2019/utils/theme.dart' as Themex;
-import 'package:url_launcher/url_launcher.dart';
+import 'package:habba2019/stores/event_store.dart';
+import 'package:flutter_flux/flutter_flux.dart';
 
-
-class EventsScreen extends StatefulWidget {
-  Function onPressed;
-  List<Event> events;
-
-  EventsScreen({@required this.events});
+class SearchScreen extends StatefulWidget {
+  SearchScreen();
 
   @override
-  _EventsScreenState createState() => _EventsScreenState();
+  _SearchScreenState createState() => _SearchScreenState();
 }
 
-class _EventsScreenState extends State<EventsScreen> {
+class _SearchScreenState extends State<SearchScreen>
+    with StoreWatcherMixin<SearchScreen> {
+  EventStore store;
+
+  void initState() {
+    super.initState();
+    store = listenToStore(eventStoreToken);
+  }
+
+  List<Event> eventList = [];
   TextStyle _titleStyle = TextStyle(color: Colors.black, fontSize: 30);
   TextStyle _textStyle =
       TextStyle(color: Colors.black54, fontWeight: FontWeight.w100);
   bool isRegistering = false;
+  String searchTerm = '';
+  Flushbar _flushbar =
+      FlushbarHelper.createInformation(message: 'Registrations will open soon');
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-//    return Scaffold(
-//      backgroundColor: Colors.transparent,
-//      body: ListView.builder(
-//        itemBuilder: (BuildContext context, int i) {
-//          return EventCard(
-//            event: widget.events[i],
-//          );
-//        },
-//        itemCount: widget.events.length,
-//      ),
-//    );
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      key: scaffoldKey,
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: CustomExpansionPanelList(
-              expansionCallback: (int index, bool isExpanded) {
-                print('$index $isExpanded');
-                setState(() {
-                  widget.events[index].isExpanded = !isExpanded;
-                });
-              },
-              children: widget.events.map((Event event) {
-                return CustomExpansionPanel(
-                    isExpanded: event.isExpanded,
-                    headerBuilder: (BuildContext context, bool isExpanded) {
-                      return basicInfo(event, isExpanded);
-                    },
-                    body: dropDown(event, context));
-              }).toList(),
+    return Material(
+      color: Colors.transparent,
+      child: Scaffold(
+        appBar: PreferredSize(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Hero(
+                  tag: 'SEARCH',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextField(
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                hintText: 'Search for events!',
+                                border: InputBorder.none),
+                            onChanged: (String s) {
+                              setState(() {
+                                this.searchTerm = s;
+                              });
+                            },
+                            onEditingComplete: () {
+                              setState(() {
+                                this.eventList =
+                                    store.masterList.where((Event e) {
+                                  return e.name
+                                      .toLowerCase()
+                                      .contains(searchTerm.toLowerCase());
+                                }).toList();
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                              });
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            tapSearch();
+                          },
+                          icon: Icon(Icons.search),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
+            preferredSize: Size(150, 40)),
+        backgroundColor: Colors.transparent,
+        key: scaffoldKey,
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: CustomExpansionPanelList(
+                expansionCallback: (int index, bool isExpanded) {
+                  print('$index $isExpanded');
+                  setState(() {
+                    eventList[index].isExpanded = !isExpanded;
+                  });
+                },
+                children: eventList.map((Event event) {
+                  return CustomExpansionPanel(
+                      isExpanded: event.isExpanded,
+                      headerBuilder: (BuildContext context, bool isExpanded) {
+                        return basicInfo(event, isExpanded);
+                      },
+                      body: dropDown(event, context));
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -226,59 +274,6 @@ class _EventsScreenState extends State<EventsScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Contact ${event.organizerName}',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.whatsapp,
-                        size: 18.0,
-                        color: Colors.black.withOpacity(0.8),
-                      ),
-                      onPressed: () async {
-                        String phoneNumber = '91' + event.organizerPhone;
-                        String url =
-                            "https://api.whatsapp.com/send?phone=$phoneNumber&text=Hey%21+I+just+registered+to+your+event%2";
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('Cannot open whatsapp')));
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.phone,
-                        size: 18.0,
-                        color: Colors.black.withOpacity(0.8),
-                      ),
-                      onPressed: () async {
-                        String phoneNumber = '91' + event.organizerPhone;
-                        String url = "tel://$phoneNumber";
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Cannot open dialer'),
-                            ),
-                          );
-                      },
-                    )
-                  ],
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -374,9 +369,7 @@ class _EventsScreenState extends State<EventsScreen> {
                                   backgroundColor: Colors.white,
                                   content: Text(
                                     'Registered successfully!',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                 ),
                               );
@@ -389,4 +382,13 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ),
       );
+
+  void tapSearch() {
+    setState(() {
+      this.eventList = store.masterList.where((Event e) {
+        return e.name.toLowerCase().contains(searchTerm.toLowerCase());
+      }).toList();
+      FocusScope.of(context).requestFocus(new FocusNode());
+    });
+  }
 }

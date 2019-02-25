@@ -109,44 +109,13 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                     Center(
                       child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: GradientText(
-                          'Acharya Habba\n2019',
-                          textAlign: TextAlign.center,
-                          gradient: Gradients.haze,
-                          shaderRect: Rect.fromLTWH(10, 10, 100, 100),
-                          style: TextStyle(
-                              shadows: [
-                                Shadow(
-                                  offset: Offset(1.0, 3.0),
-                                  blurRadius: 10.0,
-                                  color: Color.fromARGB(125, 0, 0, 255)
-                                      .withOpacity(0.15),
-                                ),
-                                Shadow(
-                                    // bottomLeft
-                                    offset: Offset(-1.5, -1.5),
-                                    color: Colors.black54),
-                                Shadow(
-                                    // bottomRight
-                                    offset: Offset(1.5, -1.5),
-                                    color: Colors.black54),
-                                Shadow(
-                                    // topRight
-                                    offset: Offset(1.5, 1.5),
-                                    color: Colors.black54),
-                                Shadow(
-                                    // topLeft
-                                    offset: Offset(-1.5, 1.5),
-                                    color: Colors.black54),
-                              ],
-                              fontSize: 54.0,
-                              fontFamily: 'ProductSans',
-                              fontWeight: FontWeight.w200,
-                              decorationStyle: TextDecorationStyle.solid,
-                              decoration: TextDecoration.overline),
-                        ),
-                      ),
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            children: <Widget>[
+                              _buildTitle('Acharya Habba'),
+                              _buildTitle('2019')
+                            ],
+                          )),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
@@ -365,7 +334,7 @@ class _LoginScreenState extends State<LoginScreen>
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     boxShadow: <BoxShadow>[
                       BoxShadow(
-                        color: Themex.CustomColors.iconActiveColor,
+                        color: Themex.CustomColors.iconInactiveColor,
                         offset: Offset(1.0, 6.0),
                         blurRadius: 20.0,
                       ),
@@ -375,24 +344,26 @@ class _LoginScreenState extends State<LoginScreen>
                         blurRadius: 20.0,
                       ),
                     ],
-                    color: Themex.CustomColors.iconActiveColor,
+                    color: Themex.CustomColors.iconInactiveColor,
                   ),
                   child: MaterialButton(
-                      highlightColor: Colors.transparent,
-                      splashColor: Themex.CustomColors.loginGradientEnd,
-                      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 42.0),
-                        child: Text(
-                          "Login",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                          ),
+                    color: Themex.CustomColors.iconInactiveColor,
+                    highlightColor: Colors.transparent,
+                    splashColor: Themex.CustomColors.iconActiveColor,
+                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 42.0),
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
                         ),
                       ),
-                      onPressed: _handleLogin),
+                    ),
+                    onPressed: _handleLogin,
+                  ),
                 ),
               ],
             ),
@@ -438,13 +409,10 @@ class _LoginScreenState extends State<LoginScreen>
               onPressed: () {
                 AuthStoreActions.guestLogin.call(true);
               },
-              child: Text(
-                'Explore without logging in!',
-                style: TextStyle(
+              child: _buildTitle('Explore without loggin in',  TextStyle(
                     fontSize: 17.0,
                     color: Colors.white,
-                    decoration: TextDecoration.underline),
-              ),
+                    decoration: TextDecoration.underline),),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -761,7 +729,7 @@ class _LoginScreenState extends State<LoginScreen>
                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                            color: Themex.CustomColors.iconActiveColor,
+                            color: Themex.CustomColors.iconInactiveColor,
                             offset: Offset(1.0, 6.0),
                             blurRadius: 20.0,
                           ),
@@ -771,11 +739,11 @@ class _LoginScreenState extends State<LoginScreen>
                             blurRadius: 20.0,
                           ),
                         ],
-                        color: Themex.CustomColors.iconActiveColor,
+                        color: Themex.CustomColors.iconInactiveColor,
                       ),
                       child: MaterialButton(
                         highlightColor: Colors.transparent,
-                        splashColor: Themex.CustomColors.loginGradientEnd,
+                        splashColor: Themex.CustomColors.iconInactiveColor,
                         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -996,5 +964,29 @@ class _LoginScreenState extends State<LoginScreen>
     } catch (error) {
       print(error);
     }
+  }
+
+  Widget _buildTitle(String s, [TextStyle textStyle = const TextStyle(
+              color: Colors.white,
+              fontSize: 54,
+              fontFamily: 'ProductSans',
+              fontWeight: FontWeight.w100,
+            )]) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          color: Themex.CustomColors.iconInactiveColor,
+          child: GradientText(
+            s,
+            gradient: Gradients.haze,
+            shaderRect: Rect.fromLTWH(100, 0, 100, 100),
+            style: textStyle,
+          ),
+        ),
+      ),
+    );
   }
 }

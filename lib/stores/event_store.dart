@@ -27,6 +27,12 @@ class EventStoreActions {
 class EventStore extends Store {
   MasterfetchModel masterfetchModel;
   String deviceToken = '';
+  List<Event> masterList = <Event>[];
+  List<Event> day0Events = <Event>[];
+  List<Event> day1Events = <Event>[];
+  List<Event> day2Events = <Event>[];
+  List<Event> day3Events = <Event>[];
+
   EventStore() {
     triggerOnAction(EventStoreActions.registerToEvent,
         (EventRegistrationModel eventReg) async {
@@ -55,7 +61,8 @@ class EventStore extends Store {
         eventReg.completer.complete(jsonMap);
         UserStoreActions.fetchUserDetails.call(Completer<Map>());
       } on SocketException catch (e) {
-        eventReg.completer.complete({'success': false, 'code': 0, 'message': 'No Network'});
+        eventReg.completer
+            .complete({'success': false, 'code': 0, 'message': 'No Network'});
       }
     });
 
@@ -82,16 +89,24 @@ class EventStore extends Store {
     triggerOnAction(EventStoreActions.masterfetch, (Completer completer) async {
       try {
         http.Response response =
-        await http.get('https://api.habba19.tk/events/masterfetch');
+            await http.get('https://api.habba19.tk/events/masterfetch');
         Map jsonResponse = await jsonDecode(response.body);
         if (jsonResponse['success']) {
           masterfetchModel = MasterfetchModel.fromJson(jsonResponse['data']);
           print(response.body);
+          this.masterList.clear();
+          this.masterList = masterfetchModel.masterList;
+          this.day0Events = masterfetchModel.day0List;
+          this.day1Events = masterfetchModel.day1List;
+          this.day2Events = masterfetchModel.day2List;
+          this.day3Events = masterfetchModel.day3List;
         }
         completer.complete(jsonResponse['success']);
-      }
-      on SocketException catch(e) {
-        completer.complete({'success': false, 'error': {'code': 0, 'message': 'No Network'}});
+      } on SocketException catch (e) {
+        completer.complete({
+          'success': false,
+          'error': {'code': 0, 'message': 'No Network'}
+        });
       }
     });
   }

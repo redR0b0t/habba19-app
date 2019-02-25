@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_flux/flutter_flux.dart';
 import 'package:habba2019/screens/about_screen.dart';
+import 'package:habba2019/screens/insta_screen.dart';
 import 'package:habba2019/screens/login_screen.dart';
 import 'package:habba2019/screens/news_feed_screen.dart';
 import 'package:habba2019/screens/olympics_screen.dart';
@@ -18,8 +19,8 @@ import 'package:habba2019/stores/user_store.dart';
 import 'package:habba2019/widgets/custom_tab_bar.dart';
 import 'package:habba2019/widgets/custom_tab_scaffold.dart';
 
-import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:habba2019/screens/timeline_screen.dart';
 import 'package:habba2019/utils/theme.dart' as Themex;
 
 void main() => runApp(MyApp());
@@ -81,13 +82,13 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
                     olympicsIconColor = Themex.CustomColors.iconActiveColor;
                   else
                     olympicsIconColor = Themex.CustomColors.iconInactiveColor;
-                  if (index == 2)
+                  if (index == 3)
                     habbaIconColor = Themex.CustomColors.iconActiveColor;
                   else
                     habbaIconColor = Themex.CustomColors.iconInactiveColor;
                 });
               },
-              currentIndex: 2,
+              currentIndex: 3,
               inactiveColor: Themex.CustomColors.iconInactiveColor,
               activeColor: Themex.CustomColors.iconActiveColor,
               items: <BottomNavigationBarItem>[
@@ -103,12 +104,18 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
                   icon: Icon(FontAwesomeIcons.megaport),
                 ),
                 BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.instagram),
+                ),
+                BottomNavigationBarItem(
                   icon: Image.asset(
                     'assets/icon.png',
                     color: habbaIconColor,
                     height: 60,
                     width: 60,
                   ),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.timeline),
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.event),
@@ -122,14 +129,16 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
               switch (index) {
                 case 0:
                   return OlympicsScreen();
-
                 case 1:
                   return NewsFeedScreen();
-                case 2:
-                  return CarouselContainer();
+                case 2: return InstaScreen();
                 case 3:
-                  return UserScreen();
+                  return CarouselContainer();
                 case 4:
+                  return TimelineScreen();
+                case 5:
+                  return UserScreen();
+                case 6:
                   return AboutScreen();
               }
             },
