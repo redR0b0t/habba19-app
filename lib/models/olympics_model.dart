@@ -28,15 +28,16 @@ class Data {
   int collegeId;
   String name;
   int points;
-  String imgUrl;
+  String imgUrl, description;
 
-  Data({this.collegeId, this.name, this.points, this.imgUrl});
+  Data({this.collegeId, this.name, this.points, this.imgUrl, this.description});
 
   Data.fromJson(Map<String, dynamic> json) {
     collegeId = json['college_id'];
     name = json['name'];
     points = json['points'];
     imgUrl = json['img_url'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {

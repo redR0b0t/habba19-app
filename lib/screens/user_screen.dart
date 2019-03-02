@@ -294,7 +294,7 @@ class _UserScreenState extends State<UserScreen>
                                 String phoneNumber = '91' +
                                     store.eventsRegistered[index].phoneNumber;
                                 String url =
-                                    "https://api.whatsapp.com/send?phone=$phoneNumber&text=Hey%21+I+just+registered+to+your+event%2";
+                                    "https://api.whatsapp.com/send?phone=$phoneNumber&text=Hey%21+${store.eventsRegistered[index].organizerName}+I+wanted+to+registered+to+your+event";
                                 if (await canLaunch(url)) {
                                   await launch(url);
                                 } else
@@ -491,3 +491,4 @@ class _UserScreenState extends State<UserScreen>
     }
   }
 }
+

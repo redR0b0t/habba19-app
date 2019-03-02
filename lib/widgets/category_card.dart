@@ -6,8 +6,12 @@ class CategoryCard extends StatelessWidget {
   String name;
   List items;
   String images;
+  int eventsLength;
 
-  CategoryCard({@required this.name, @required this.images}) {
+  CategoryCard(
+      {@required this.name,
+      @required this.images,
+      @required this.eventsLength}) {
     List<String> imgs = images.split(',').toList();
 
     items = imgs.map((i) {
@@ -85,18 +89,24 @@ class CategoryCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      name ?? 'Anon',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 50.0, color: Colors.white.withOpacity(0.7),),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        name ?? 'Anon',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               )
             ],
           ),

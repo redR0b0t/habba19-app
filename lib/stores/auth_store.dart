@@ -55,6 +55,7 @@ class AuthStore extends Store {
         await preferences.remove('deviceToken');
         guestLoggedIn = false;
       }
+      print('STATE: loggedIn $isLoggedIn, guest $guestLoggedIn');
     });
 
     triggerOnAction(AuthStoreActions.checkAuth, (_) async {
@@ -86,7 +87,7 @@ class AuthStore extends Store {
         loginModel.completer.complete(jsonResponse);
       } on SocketException catch (e) {
         loginModel.completer
-            .complete({'success': false, 'code': 0, 'message': 'No Network'});
+            .complete({'success': false, 'error': {'code': 0, 'message': 'No Network'}});
       }
     });
     triggerOnAction(AuthStoreActions.signup,

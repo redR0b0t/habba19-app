@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:habba2019/models/masterfetch_model.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flushbar/flushbar.dart';
@@ -11,6 +12,7 @@ import 'package:habba2019/widgets/custom_expansion.dart';
 import 'package:habba2019/utils/theme.dart' as Themex;
 import 'package:habba2019/stores/event_store.dart';
 import 'package:flutter_flux/flutter_flux.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SearchScreen extends StatefulWidget {
   SearchScreen();
@@ -44,6 +46,19 @@ class _SearchScreenState extends State<SearchScreen>
     return Material(
       color: Colors.transparent,
       child: Scaffold(
+        floatingActionButton: Transform.scale(
+          scale: 0.8,
+          child: Opacity(
+            opacity: 0.85,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Icon(Icons.arrow_back),
+              backgroundColor: Themex.CustomColors.iconActiveColor,
+            ),
+          ),
+        ),
         appBar: PreferredSize(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -74,7 +89,8 @@ class _SearchScreenState extends State<SearchScreen>
                                       .toLowerCase()
                                       .contains(searchTerm.toLowerCase());
                                 }).toList();
-                                FocusScope.of(context).requestFocus(new FocusNode());
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
                               });
                             },
                           ),
@@ -96,25 +112,30 @@ class _SearchScreenState extends State<SearchScreen>
         key: scaffoldKey,
         body: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: CustomExpansionPanelList(
-                expansionCallback: (int index, bool isExpanded) {
-                  print('$index $isExpanded');
-                  setState(() {
-                    eventList[index].isExpanded = !isExpanded;
-                  });
-                },
-                children: eventList.map((Event event) {
-                  return CustomExpansionPanel(
-                      isExpanded: event.isExpanded,
-                      headerBuilder: (BuildContext context, bool isExpanded) {
-                        return basicInfo(event, isExpanded);
+            eventList.length == 0
+                ? Center(
+                    child: Text('No events for your search!'),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: CustomExpansionPanelList(
+                      expansionCallback: (int index, bool isExpanded) {
+                        print('$index $isExpanded');
+                        setState(() {
+                          eventList[index].isExpanded = !isExpanded;
+                        });
                       },
-                      body: dropDown(event, context));
-                }).toList(),
-              ),
-            ),
+                      children: eventList.map((Event event) {
+                        return CustomExpansionPanel(
+                            isExpanded: event.isExpanded,
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return basicInfo(event, isExpanded);
+                            },
+                            body: dropDown(event, context));
+                      }).toList(),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -274,6 +295,73 @@ class _SearchScreenState extends State<SearchScreen>
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Contact ${event.organizerName}',
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.5),
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        FontAwesomeIcons.whatsapp,
+                        size: 18.0,
+                        color: Colors.black.withOpacity(0.8),
+                      ),
+                      onPressed: () async {
+                        String phoneNumber = '+91' + event.organizerPhone;
+                        String url =
+                            "https://api.whatsapp.com/send?phone=$phoneNumber&text=Hey%21+I+just+registered+to+your+event%2";
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Cannot open whatsapp')));
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.phone,
+                        size: 18.0,
+                        color: Colors.black.withOpacity(0.8),
+                      ),
+                      onPressed: () async {
+                        String phoneNumber = '+91' + event.organizerPhone;
+                        String url = "tel://$phoneNumber";
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Cannot open dialer'),
+                            ),
+                          );
+                      },
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Starts On: ${DateTime.parse(event.startDate).day} March, ${DateTime.parse(event.startDate).hour}:${DateTime.parse(event.startDate).minute}',
+                  style: TextStyle(color: Colors.black54),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Ends On: ${DateTime.parse(event.endDate).day} March, ${DateTime.parse(event.endDate).hour}:${DateTime.parse(event.endDate).minute}',
+                  style: TextStyle(color: Colors.black54),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -307,8 +395,8 @@ class _SearchScreenState extends State<SearchScreen>
                                       CircularProgressIndicator(
                                         valueColor:
                                             new AlwaysStoppedAnimation<Color>(
-                                                Themex.CustomColors
-                                                    .iconActiveColor),
+                                          Themex.CustomColors.iconActiveColor,
+                                        ),
                                       )
                                     ],
                                   ),
@@ -349,6 +437,26 @@ class _SearchScreenState extends State<SearchScreen>
                                 );
                                 return;
                               }
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('DISMISS'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                      title: Text('Note'),
+                                      content: Padding(
+                                        padding: const EdgeInsets.all(0.0),
+                                        child: Text(
+                                          'Your registration is confirmed only after you pay the registration amount to one of the volunteers and obtain a registration reciept!',
+                                        ),
+                                      ),
+                                    ),
+                              );
                               if (!res['success']) {
                                 scaffoldKey.currentState.showSnackBar(
                                   SnackBar(

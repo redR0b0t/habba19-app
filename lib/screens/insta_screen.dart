@@ -33,12 +33,16 @@ class _InstaScreenState extends State<InstaScreen>
   bool isError = false;
 
   _fetchNewsFeed() async {
+    setState(() {
+      isLoading = true;
+    });
     http.Response response =
         await http.get('https://api.habba19.tk/events/instapics');
     Map jsonMap = await jsonDecode(response.body);
     _controller.forward();
     InstaModel instaModel = InstaModel.fromJson(jsonMap);
     setState(() {
+      isLoading = false;
       instaPictures.clear();
       instaPictures.addAll(instaModel.data);
     });
@@ -81,6 +85,22 @@ class _InstaScreenState extends State<InstaScreen>
         ),
       );
     }
+    if (isLoading) {
+      return NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (OverscrollIndicatorNotification overscroll) {
+          overscroll.disallowGlow();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation(Themex.CustomColors.iconActiveColor),
+            ),
+          ),
+        ),
+      );
+    }
     return NotificationListener<OverscrollIndicatorNotification>(
       onNotification: (OverscrollIndicatorNotification overscroll) {
         overscroll.disallowGlow();
@@ -88,7 +108,7 @@ class _InstaScreenState extends State<InstaScreen>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text('#habba19'),
+          title: Text('#habba19 on Instagram'),
           centerTitle: true,
           elevation: 0,
         ),
@@ -132,10 +152,23 @@ class _InstaScreenState extends State<InstaScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                         CachedNetworkImage(
-                                  imageUrl: 'https://images.habba19.tk/instagram/habba19/${instaPictures[index]}',
-                                  fit: BoxFit.cover,
-                                )
+                          CachedNetworkImage(
+                            imageUrl:
+                                'https://images.habba19.tk/instagram/habba19/${instaPictures[index]}',
+                            placeholder: Container(
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation(
+                                      Themex.CustomColors.iconActiveColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            fit: BoxFit.cover,
+                          )
                         ],
                       ),
                     ),

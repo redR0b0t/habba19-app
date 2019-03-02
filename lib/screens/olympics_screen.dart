@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:habba2019/models/olympics_model.dart';
+import 'package:habba2019/utils/theme.dart' as Themex;
 import 'dart:convert';
 
 class OlympicsScreen extends StatefulWidget {
@@ -62,7 +63,10 @@ class _OlympicsScreenState extends State<OlympicsScreen>
           centerTitle: true,
         ),
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            valueColor:
+                AlwaysStoppedAnimation(Themex.CustomColors.iconActiveColor),
+          ),
         ),
       );
     }
@@ -140,18 +144,36 @@ class _OlympicsScreenState extends State<OlympicsScreen>
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Image.asset('assets/1stplace.png'),
-                                        Text(
-                                          _olympicsModel.data[index].name,
-                                          style: _collegeTextStyle,
-                                        ),
-                                        Text(
-                                          '${_olympicsModel.data[index].points} points',
-                                          style: _pointsTextStyle,
-                                        )
-                                      ],
+                                    GestureDetector(
+                                      onTap: () => _handleCollegePopup(
+                                            _olympicsModel.data[index],
+                                          ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              Image.asset(
+                                                  'assets/1stplace.png'),
+                                              Text(
+                                                _olympicsModel.data[index].name,
+                                                style: _collegeTextStyle,
+                                              ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    '${_olympicsModel.data[index].points} points',
+                                                    style: _pointsTextStyle,
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          Icon(
+                                            Icons.info_outline,
+                                            size: 15,
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
@@ -159,31 +181,60 @@ class _OlympicsScreenState extends State<OlympicsScreen>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Image.asset('assets/3rdplace.png'),
-                                        Text(
-                                          _olympicsModel.data[index + 1].name,
-                                          style: _collegeTextStyle,
-                                        ),
-                                        Text(
-                                          '${_olympicsModel.data[index + 1].points} points',
-                                          style: _pointsTextStyle,
-                                        )
-                                      ],
+                                    GestureDetector(
+                                      onTap: () => _handleCollegePopup(
+                                            _olympicsModel.data[index + 1],
+                                          ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              Image.asset(
+                                                  'assets/3rdplace.png'),
+                                              Text(
+                                                _olympicsModel
+                                                    .data[index + 1].name,
+                                                style: _collegeTextStyle,
+                                              ),
+                                              Text(
+                                                '${_olympicsModel.data[index + 1].points} points',
+                                                style: _pointsTextStyle,
+                                              )
+                                            ],
+                                          ),
+                                          Icon(
+                                            Icons.info_outline,
+                                            size: 15,
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    Column(
-                                      children: <Widget>[
-                                        Image.asset('assets/2ndplace.png'),
-                                        Text(
-                                          '${_olympicsModel.data[index + 2].name}',
-                                          style: _collegeTextStyle,
-                                        ),
-                                        Text(
-                                          '${_olympicsModel.data[index + 2].points} points',
-                                          style: _pointsTextStyle,
-                                        )
-                                      ],
+                                    GestureDetector(
+                                      onTap: () => _handleCollegePopup(
+                                            _olympicsModel.data[index + 2],
+                                          ),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              Image.asset(
+                                                  'assets/2ndplace.png'),
+                                              Text(
+                                                '${_olympicsModel.data[index + 2].name}',
+                                                style: _collegeTextStyle,
+                                              ),
+                                              Text(
+                                                '${_olympicsModel.data[index + 2].points} points',
+                                                style: _pointsTextStyle,
+                                              )
+                                            ],
+                                          ),
+                                          Icon(
+                                            Icons.info_outline,
+                                            size: 15,
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 )
@@ -222,48 +273,54 @@ class _OlympicsScreenState extends State<OlympicsScreen>
                     ),
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        child: Container(
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
+                        child: InkWell(
+                          onTap: () => _handleCollegePopup(
+                                _olympicsModel.data[index],
+                              ),
+                          child: Container(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
 //                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: CircleAvatar(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 7.0),
-                                      child: Text(
-                                        (index + 1).toString(),
-                                        style: TextStyle(
-                                          color: Colors.white,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: CircleAvatar(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 7.0),
+                                        child: Text(
+                                          (index + 1).toString(),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
+                                      backgroundImage:
+                                          AssetImage('assets/prize.png'),
+                                      backgroundColor: Colors.white,
                                     ),
-                                    backgroundImage:
-                                        AssetImage('assets/prize.png'),
-                                    backgroundColor: Colors.white,
                                   ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    _olympicsModel.data[index].name,
-                                    textAlign: TextAlign.center,
-                                    style: _collegeTextStyle,
+                                  Expanded(
+                                    child: Text(
+                                      _olympicsModel.data[index].name,
+                                      textAlign: TextAlign.center,
+                                      style: _collegeTextStyle,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '${_olympicsModel.data[index].points} points',
-                                    textAlign: TextAlign.right,
-                                    style: _pointsTextStyle,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      '${_olympicsModel.data[index].points} points',
+                                      textAlign: TextAlign.right,
+                                      style: _pointsTextStyle,
+                                    ),
                                   ),
-                                )
-                              ],
+                                  Icon(Icons.info_outline, size: 15,)
+                                ],
+                              ),
                             ),
                           ),
                         )),
@@ -290,5 +347,29 @@ class _OlympicsScreenState extends State<OlympicsScreen>
       _isLoading = false;
       _olympicsModel = OlympicsModel.fromJson(jsonResponse);
     });
+  }
+
+  void _handleCollegePopup(Data data) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => SimpleDialog(
+            title: Text(
+              data.name,
+              textAlign: TextAlign.center,
+            ),
+            children: <Widget>[
+              Image.network(
+                data.imgUrl,
+                width: 60,
+                height: 60,
+              ),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(data.description),
+              )
+            ],
+          ),
+    );
   }
 }

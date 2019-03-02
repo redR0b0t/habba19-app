@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_flux/flutter_flux.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:habba2019/screens/about_screen.dart';
 import 'package:habba2019/screens/insta_screen.dart';
 import 'package:habba2019/screens/login_screen.dart';
 import 'package:habba2019/screens/news_feed_screen.dart';
 import 'package:habba2019/screens/olympics_screen.dart';
+import 'package:habba2019/screens/splash_screen.dart';
 import 'package:habba2019/screens/user_screen.dart';
 import 'package:habba2019/stores/auth_store.dart';
 import 'package:habba2019/stores/event_store.dart';
@@ -33,7 +35,13 @@ class MyApp extends StatelessWidget {
         fontFamily: 'ProductSans',
         primaryColor: Themex.CustomColors.iconInactiveColor,
       ),
-      home: Home(),
+      home: SplashScreen(
+        seconds: 3,
+        image: Image.asset('assets/splash.gif'),
+        backgroundColor: Colors.black,
+        photoSize: 300,
+        navigateAfterSeconds: Home(),
+      ),
     );
   }
 }
@@ -57,7 +65,7 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
 
   HomeState() {
     olympicsIconColor = Themex.CustomColors.iconInactiveColor;
-    habbaIconColor = Themex.CustomColors.iconActiveColor;
+    habbaIconColor = null;
     store = listenToStore(eventStoreToken);
     authStore = listenToStore(authStoreToken);
     userStore = listenToStore(userStoreToken);
@@ -75,7 +83,7 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
         ? LoginScreen()
         : CustomTabScaffold(
             tabBar: CustomTabBar(
-              iconSize: 25,
+              iconSize: 23,
               onTap: (int index) {
                 setState(() {
                   if (index == 0)
@@ -83,7 +91,7 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
                   else
                     olympicsIconColor = Themex.CustomColors.iconInactiveColor;
                   if (index == 3)
-                    habbaIconColor = Themex.CustomColors.iconActiveColor;
+                    habbaIconColor = null;
                   else
                     habbaIconColor = Themex.CustomColors.iconInactiveColor;
                 });
@@ -96,8 +104,8 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
                   icon: Image.asset(
                     'assets/Olympics.png',
                     color: olympicsIconColor,
-                    height: 25,
-                    width: 25,
+                    height: 23,
+                    width: 23,
                   ),
                 ),
                 BottomNavigationBarItem(
@@ -108,7 +116,7 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
                 ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
-                    'assets/icon.png',
+                    'assets/xpaw.png',
                     color: habbaIconColor,
                     height: 60,
                     width: 60,
@@ -131,7 +139,8 @@ class HomeState extends State<Home> with StoreWatcherMixin<Home> {
                   return OlympicsScreen();
                 case 1:
                   return NewsFeedScreen();
-                case 2: return InstaScreen();
+                case 2:
+                  return InstaScreen();
                 case 3:
                   return CarouselContainer();
                 case 4:

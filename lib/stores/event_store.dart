@@ -70,18 +70,24 @@ class EventStore extends Store {
         (String deviceToken) async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       this.deviceToken = await preferences.getString('deviceToken');
+      print('Dev Token down');
+      print(this.deviceToken);
       if (this.deviceToken == null || this.deviceToken == '') {
-        http.Response response = await http.post(
-          'https://api.habba19.tk/events/subgen',
-          body: {'device_id': deviceToken},
-        );
-        this.deviceToken = deviceToken;
-        if (response.statusCode == 200) {
-          print(response.body);
-          if (jsonDecode(response.body)['success']) {
-            await preferences.setString('deviceToken', deviceToken);
-            print('registered device');
+        try {
+          http.Response response = await http.post(
+            'https://api.habba19.tk/events/subgen',
+            body: {'device_id': deviceToken},
+          );
+          this.deviceToken = deviceToken;
+          if (response.statusCode == 200) {
+            print(response.body);
+            if (jsonDecode(response.body)['success']) {
+              await preferences.setString('deviceToken', deviceToken);
+              print('registered device');
+            }
           }
+        } on SocketException catch(e) {
+          print('Socket Exception');
         }
       }
     });
@@ -99,14 +105,12 @@ class EventStore extends Store {
           this.day0Events = masterfetchModel.day0List;
           this.day1Events = masterfetchModel.day1List;
           this.day2Events = masterfetchModel.day2List;
+          print(this.day2Events);
           this.day3Events = masterfetchModel.day3List;
         }
         completer.complete(jsonResponse['success']);
       } on SocketException catch (e) {
-        completer.complete({
-          'success': false,
-          'error': {'code': 0, 'message': 'No Network'}
-        });
+        completer.complete(false);
       }
     });
   }

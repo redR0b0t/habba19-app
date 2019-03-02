@@ -4,9 +4,9 @@
     <item android:drawable="@android:color/transparent"/>
 
      <!--You can insert your own image assets here -->
-     <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/icon" />
-    </item>
+     <!--<item>-->
+        <!--&lt;!&ndash;<bitmap&ndash;&gt;-->
+            <!--&lt;!&ndash;android:gravity="center"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:src="@drawable/icon" />&ndash;&gt;-->
+    <!--</item>-->
 </layer-list>

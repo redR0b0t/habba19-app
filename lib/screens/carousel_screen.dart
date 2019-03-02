@@ -5,7 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:habba2019/screens/events_screen.dart';
 import 'package:flutter_flux/flutter_flux.dart';
+import 'package:habba2019/screens/no_network_screen.dart';
 import 'package:habba2019/screens/search_screen.dart';
+import 'package:habba2019/stores/auth_store.dart';
 import 'package:vibrate/vibrate.dart';
 import 'package:habba2019/widgets/category_card.dart';
 import 'package:path_parsing/path_parsing.dart';
@@ -55,8 +57,8 @@ class CarouselContainerState extends State<CarouselContainer>
 
   @override
   void dispose() {
-    super.dispose();
     controller.dispose();
+    super.dispose();
   }
 
   void masterFetch() async {
@@ -68,12 +70,14 @@ class CarouselContainerState extends State<CarouselContainer>
     EventStoreActions.masterfetch.call(completer);
     bool res = await completer.future;
     isLoading = false;
-    controller.forward();
     if (!res) {
       setState(() {
         isError = true;
       });
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => NoNetworkScreen()));
+      return;
     }
+    controller.forward();
   }
 
   BoxDecoration gradientBack() {
@@ -188,7 +192,7 @@ class CarouselContainerState extends State<CarouselContainer>
               opacity: carouselOpacityTranslation.value,
               child: Swiper(
                 control: SwiperControl(
-                    color: Themex.CustomColors.iconActiveColor.withOpacity(0.7),
+                    color: Colors.white.withOpacity(0.75),
                     iconNext: FontAwesomeIcons.angleDoubleRight,
                     iconPrevious: FontAwesomeIcons.angleDoubleLeft),
                 loop: false,
@@ -196,7 +200,7 @@ class CarouselContainerState extends State<CarouselContainer>
                 curve: Curves.linear,
                 onIndexChanged: (int i) async {
                   await Future.delayed(Duration(microseconds: 4000));
-                  Vibrate.feedback(FeedbackType.selection);
+                  Vibrate.feedback(FeedbackType.impact);
                 },
                 scale: 0.9,
                 pagination: SwiperPagination(
@@ -240,6 +244,7 @@ class CarouselContainerState extends State<CarouselContainer>
                                     IconButton(
                                       icon: Icon(
                                         FontAwesomeIcons.instagram,
+                                        size: 23,
                                         color: Themex
                                             .CustomColors.iconInactiveColor,
                                       ),
@@ -251,6 +256,7 @@ class CarouselContainerState extends State<CarouselContainer>
                                     IconButton(
                                       icon: Icon(
                                         FontAwesomeIcons.snapchat,
+                                        size: 23,
                                         color: Themex
                                             .CustomColors.iconInactiveColor,
                                       ),
@@ -262,6 +268,7 @@ class CarouselContainerState extends State<CarouselContainer>
                                     IconButton(
                                       icon: Icon(
                                         FontAwesomeIcons.facebook,
+                                        size: 23,
                                         color: Themex
                                             .CustomColors.iconInactiveColor,
                                       ),
@@ -273,6 +280,7 @@ class CarouselContainerState extends State<CarouselContainer>
                                     IconButton(
                                       icon: Icon(
                                         FontAwesomeIcons.twitter,
+                                        size: 23,
                                         color: Themex
                                             .CustomColors.iconInactiveColor,
                                       ),
@@ -321,7 +329,9 @@ class CarouselContainerState extends State<CarouselContainer>
                           name: store
                               .masterfetchModel.mainEvents[index].categoryName,
                           images: store.masterfetchModel.mainEvents[index]
-                              .categoryImages),
+                              .categoryImages,
+                          eventsLength: store.masterfetchModel.mainEvents[index].events.length,
+                      ),
                     ),
                   );
                 },
@@ -366,7 +376,7 @@ class CarouselContainerState extends State<CarouselContainer>
         borderRadius: BorderRadius.circular(10.0),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 5),
-          color: Themex.CustomColors.iconInactiveColor,
+          color: Themex.CustomColors.iconInactiveColor.withOpacity(0.85),
           child: GradientText(
             s,
             gradient: Gradients.haze,
@@ -376,7 +386,7 @@ class CarouselContainerState extends State<CarouselContainer>
               color: Colors.white,
               fontSize: 54.0,
               fontFamily: 'ProductSans',
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w300,
 //        background: Paint()
 //          ..color = Themex
 //              .CustomColors.iconInactiveColor,

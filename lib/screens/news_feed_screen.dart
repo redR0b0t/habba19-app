@@ -33,13 +33,17 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
   bool isError = false;
 
   _fetchNewsFeed() async {
+    setState(() {
+      isLoading = true;
+    });
     http.Response response =
         await http.get('https://api.habba19.tk/newsfeed/all');
     Map jsonMap = await jsonDecode(response.body);
     _controller.forward();
     setState(() {
+      isLoading = false;
       newsItems.clear();
-      newsItems.addAll(NewsFeedModel.fromJson(jsonMap).newsItems);
+      newsItems.addAll(NewsFeedModel.fromJson(jsonMap).newsItems.reversed.toList());
     });
   }
 
@@ -73,8 +77,26 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
           backgroundColor: Colors.transparent,
           body: Center(
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                _fetchNewsFeed();
+              },
               child: Text('Error occured! Retry'),
+            ),
+          ),
+        ),
+      );
+    }
+    if (isLoading) {
+      return NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (OverscrollIndicatorNotification overscroll) {
+          overscroll.disallowGlow();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation(Themex.CustomColors.iconActiveColor),
             ),
           ),
         ),
@@ -151,6 +173,18 @@ class _NewsFeedScreenState extends State<NewsFeedScreen>
                               ? Container()
                               : CachedNetworkImage(
                                   imageUrl: newsItems[index].url,
+                                  placeholder: Container(
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation(
+                                            Themex.CustomColors.iconActiveColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   fit: BoxFit.cover,
                                 )
                         ],

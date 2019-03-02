@@ -31,18 +31,50 @@ class MasterfetchModel {
   }
 
   List<Event> get day1List {
-    return masterList.where((Event e) => DateTime.parse(e.startDate).day == 28).toList();
+    try {
+      return masterList.where((Event e) {
+        try {
+          String startDate = e.startDate;
+          return DateTime.parse(startDate).day == 28;
+        } catch (e) {
+          return false;
+        }
+      }).toList();
+    } catch (e) {}
   }
+
   List<Event> get day2List {
-    return masterList.where((Event e) => DateTime.parse(e.startDate).day == 29).toList();
-  }
-  List<Event> get day3List {
-    return masterList.where((Event e) => DateTime.parse(e.startDate).day == 30).toList();
-  }
-    List<Event> get day0List {
     return masterList.where((Event e) {
-      int day = DateTime.parse(e.startDate).day;
-      return day != 28 && day != 29 && day != 30;
+      try {
+        String startDate = e.startDate;
+        return DateTime.parse(startDate).day == 29;
+      } catch (e) {
+        print(e);
+        return false;
+      }
+    }).toList();
+  }
+
+  List<Event> get day3List {
+    return masterList.where((Event e) {
+      try {
+        String startDate = e.startDate;
+        return DateTime.parse(startDate).day == 30;
+      } catch (e) {
+        return false;
+      }
+    }).toList();
+  }
+
+  List<Event> get day0List {
+    return masterList.where((Event e) {
+      try {
+        String startDate = e.startDate;
+        int day = DateTime.parse(startDate).day;
+        return day != 28 && day != 29 && day != 30;
+      } catch (e) {
+        return false;
+      }
     }).toList();
   }
 }

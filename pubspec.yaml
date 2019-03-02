@@ -1,6 +1,6 @@
 name: habba2019
 description: Acharya Habba 2019
-version: 1.0.0+1
+version: 2.0.0+10
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -33,6 +33,7 @@ dependencies:
   vibrate: 0.0.4
   cached_network_image: 0.5.1
   carousel_slider: ^1.0.1
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -61,10 +62,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/bg1.jpg
-    - assets/bg2.jpg
-    - assets/habbalogo.png
-    - assets/apllogo.png
+#    - assets/bg1.jpg
+#    - assets/bg2.jpg
+#    - assets/habbalogo.png
+#    - assets/apllogo.png
     - assets/icon.png
     - assets/Olympics.png
     - assets/kaala.png
@@ -73,14 +74,17 @@ flutter:
     - assets/2ndplace.png
     - assets/prize.png
     - assets/nopaw.png
-    - assets/sirfpaw.png
-    - assets/onlypaw.png
+    - assets/xpaw.png
+#    - assets/sirfpaw.png
+#    - assets/onlypaw.png
     - assets/rajan.jpeg
     - assets/bharath.jpeg
     - assets/ashwin.jpeg
     - assets/varshini.jpeg
     - assets/shubham.jpeg
     - assets/nikhil.jpeg
+    - assets/splash.gif
+    - assets/no_network.png
 #    - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

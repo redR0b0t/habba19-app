@@ -12,7 +12,6 @@ import 'package:habba2019/widgets/custom_expansion.dart';
 import 'package:habba2019/utils/theme.dart' as Themex;
 import 'package:url_launcher/url_launcher.dart';
 
-
 class EventsScreen extends StatefulWidget {
   Function onPressed;
   List<Event> events;
@@ -45,6 +44,19 @@ class _EventsScreenState extends State<EventsScreen> {
 //      ),
 //    );
     return Scaffold(
+      floatingActionButton: Transform.scale(
+        scale: 0.8,
+        child: Opacity(
+          opacity: 0.85,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(Icons.arrow_back),
+            backgroundColor: Themex.CustomColors.iconActiveColor,
+          ),
+        ),
+      ),
       backgroundColor: Colors.transparent,
       key: scaffoldKey,
       body: ListView(
@@ -247,7 +259,7 @@ class _EventsScreenState extends State<EventsScreen> {
                         color: Colors.black.withOpacity(0.8),
                       ),
                       onPressed: () async {
-                        String phoneNumber = '91' + event.organizerPhone;
+                        String phoneNumber = '+91' + event.organizerPhone;
                         String url =
                             "https://api.whatsapp.com/send?phone=$phoneNumber&text=Hey%21+I+just+registered+to+your+event%2";
                         if (await canLaunch(url)) {
@@ -264,7 +276,7 @@ class _EventsScreenState extends State<EventsScreen> {
                         color: Colors.black.withOpacity(0.8),
                       ),
                       onPressed: () async {
-                        String phoneNumber = '91' + event.organizerPhone;
+                        String phoneNumber = '+91' + event.organizerPhone;
                         String url = "tel://$phoneNumber";
                         if (await canLaunch(url)) {
                           await launch(url);
@@ -277,6 +289,20 @@ class _EventsScreenState extends State<EventsScreen> {
                       },
                     )
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Starts On: ${DateTime.parse(event.startDate).day} March, ${DateTime.parse(event.startDate).hour}:${DateTime.parse(event.startDate).minute}',
+                  style: TextStyle(color: Colors.black54),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Ends On: ${DateTime.parse(event.endDate).day} March, ${DateTime.parse(event.endDate).hour}:${DateTime.parse(event.endDate).minute}',
+                  style: TextStyle(color: Colors.black54),
                 ),
               ),
               Row(
@@ -354,6 +380,26 @@ class _EventsScreenState extends State<EventsScreen> {
                                 );
                                 return;
                               }
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('DISMISS'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                      title: Text('Note'),
+                                      content: Padding(
+                                        padding: const EdgeInsets.all(0.0),
+                                        child: Text(
+                                          'Your registration is confirmed only after you pay the registration amount to one of the volunteers and obtain a registration reciept!',
+                                        ),
+                                      ),
+                                    ),
+                              );
                               if (!res['success']) {
                                 scaffoldKey.currentState.showSnackBar(
                                   SnackBar(
@@ -365,8 +411,10 @@ class _EventsScreenState extends State<EventsScreen> {
                                   ),
                                 );
                                 if (res['error']['code'] == 701) {
+                                  AuthStoreActions.changeAuth.call(false);
                                   Navigator.of(context).pop();
                                 }
+
                                 return;
                               }
                               scaffoldKey.currentState.showSnackBar(

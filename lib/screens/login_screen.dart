@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen>
                         height: 90.0,
                         fit: BoxFit.fill,
                         image: new AssetImage(
-                          'assets/onlypaw.png',
+                          'assets/xpaw.png',
                         ),
                       ),
                     ),
@@ -409,10 +409,13 @@ class _LoginScreenState extends State<LoginScreen>
               onPressed: () {
                 AuthStoreActions.guestLogin.call(true);
               },
-              child: _buildTitle('Explore without loggin in',  TextStyle(
+              child: _buildTitle(
+                'Explore without loggin in',
+                TextStyle(
                     fontSize: 17.0,
                     color: Colors.white,
-                    decoration: TextDecoration.underline),),
+                    decoration: TextDecoration.underline),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -512,7 +515,7 @@ class _LoginScreenState extends State<LoginScreen>
                             child: Row(
                               children: <Widget>[
                                 Text(
-                                  'Student Of',
+                                  'Student/Faculty Of',
                                   textAlign: TextAlign.start,
                                 ),
                               ],
@@ -548,7 +551,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         FontAwesomeIcons.envelope,
                                         color: Colors.black,
                                       ),
-                                      hintText: "Acharya Email Address",
+                                      hintText: "Select Acharya Email Address",
                                       hintStyle: TextStyle(fontSize: 16.0),
                                     ),
                                   )
@@ -572,6 +575,28 @@ class _LoginScreenState extends State<LoginScreen>
                                     ),
                                   ),
                           ),
+                          _collegeName == _aitStudent
+                              ? Container()
+                              : Container(
+                                  width: 250.0,
+                                  height: 1.0,
+                                  color: Colors.grey[400],
+                                ),
+                          _collegeName == _aitStudent
+                              ? Container()
+                              : Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 20.0,
+                                    bottom: 20.0,
+                                    left: 25.0,
+                                    right: 25.0,
+                                  ),
+                                  child: Container(
+                                    child: Text(
+                                      'Your cannot register to special events, only for students of Acharya Institutes',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )),
                           Container(
                             width: 250.0,
                             height: 1.0,
@@ -723,7 +748,7 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                   Positioned(
-                    bottom: -20,
+                    bottom: -40,
                     child: Container(
                       decoration: new BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -951,9 +976,20 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _onEmailPress() async {
+    signupEmailController.clear();
     try {
       await _googleSignIn.signOut();
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          });
       GoogleSignInAccount account = await _googleSignIn.signIn();
+
+      Navigator.pop(context);
+
       if (!account.email.endsWith('acharya.ac.in')) {
         setState(() {
           _emailValidate = true;
@@ -966,19 +1002,20 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  Widget _buildTitle(String s, [TextStyle textStyle = const TextStyle(
-              color: Colors.white,
-              fontSize: 54,
-              fontFamily: 'ProductSans',
-              fontWeight: FontWeight.w100,
-            )]) {
+  Widget _buildTitle(String s,
+      [TextStyle textStyle = const TextStyle(
+        color: Colors.white,
+        fontSize: 54,
+        fontFamily: 'ProductSans',
+        fontWeight: FontWeight.w100,
+      )]) {
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10.0),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 5),
-          color: Themex.CustomColors.iconInactiveColor,
+          color: Themex.CustomColors.iconInactiveColor.withOpacity(0.85),
           child: GradientText(
             s,
             gradient: Gradients.haze,

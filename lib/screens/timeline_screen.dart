@@ -215,7 +215,7 @@ class EventContent extends StatelessWidget {
                           size: 18,
                         ),
                         onPressed: () async {
-                          String phoneNumber = '91' + event.organizerPhone;
+                          String phoneNumber = '+91' + event.organizerPhone;
                           String url =
                               "https://api.whatsapp.com/send?phone=$phoneNumber&text=Hey%21+I+just+registered+to+your+event%2";
                           if (await canLaunch(url)) {
@@ -231,7 +231,7 @@ class EventContent extends StatelessWidget {
                           size: 18,
                         ),
                         onPressed: () async {
-                          String phoneNumber = '91' + event.organizerPhone;
+                          String phoneNumber = '+91' + event.organizerPhone;
                           String url = "tel://$phoneNumber";
                           if (await canLaunch(url)) {
                             await launch(url);
@@ -243,11 +243,11 @@ class EventContent extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    'Starts On: ${DateTime.parse(event.startDate).day} March ${DateTime.parse(event.startDate).hour}:${DateTime.parse(event.startDate).minute}',
+                    'Starts On: ${DateTime.parse(event.startDate).day} March, ${DateTime.parse(event.startDate).hour}:${DateTime.parse(event.startDate).minute}',
                     style: TextStyle(color: Colors.black54),
                   ),
                   Text(
-                    'Ends On: ${DateTime.parse(event.endDate).day} March ${DateTime.parse(event.endDate).hour}:${DateTime.parse(event.endDate).minute}',
+                    'Ends On: ${DateTime.parse(event.endDate).day} March, ${DateTime.parse(event.endDate).hour}:${DateTime.parse(event.endDate).minute}',
                     style: TextStyle(color: Colors.black54),
                   ),
                   Divider(),
@@ -262,29 +262,21 @@ class EventContent extends StatelessWidget {
                                 : 'Fee: ₹${event.fee}',
                           )),
                       Container(
-                          child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          event.fee.trim() == ''
-                              ? 'You get Bragging Rights'
-                              : 'Winner gets: ₹${event.prize}',
-                        ),
-                      )),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8),
-                        child: FlatButton(
-                          textColor: Themex.CustomColors.iconInactiveColor,
-                          child: Text('REGISTER'),
-                          onPressed: () =>
-                              _handleRegister(keyIndex, event, context),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            event.fee.trim() == ''
+                                ? 'You get Bragging Rights'
+                                : 'Winner gets: ₹${event.prize}',
+                          ),
                         ),
                       ),
+                      FlatButton(
+                        textColor: Themex.CustomColors.iconInactiveColor,
+                        child: Text('REGISTER'),
+                        onPressed: () =>
+                            _handleRegister(keyIndex, event, context),
+                      )
                     ],
                   ),
                 ],
@@ -296,7 +288,7 @@ class EventContent extends StatelessWidget {
     );
   }
 
-  _handleRegister(int keyIndex, Event event, BuildContext context) async {
+  void _handleRegister(int keyIndex, Event event, BuildContext context) async {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Colors.white,
@@ -324,10 +316,9 @@ class EventContent extends StatelessWidget {
       ),
     );
     Map res = await eventRegCompleter.future;
-    Scaffold.of(context)
-        .hideCurrentSnackBar();
+    Scaffold.of(context).hideCurrentSnackBar();
     if (res['loginRequired'] ?? false) {
-      ScaffoldKeyChain.scaffoldKeyList[keyIndex].currentState.showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(
             'Login to register to events',
@@ -346,6 +337,26 @@ class EventContent extends StatelessWidget {
       );
       return;
     }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            actions: <Widget>[
+              FlatButton(
+                child: Text('DISMISS'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+            title: Text('Note'),
+            content: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Text(
+                'Your registration is confirmed only after you pay the registration amount to one of the volunteers and obtain a registration reciept!',
+              ),
+            ),
+          ),
+    );
     if (!res['success']) {
       Scaffold.of(context).showSnackBar(
         SnackBar(

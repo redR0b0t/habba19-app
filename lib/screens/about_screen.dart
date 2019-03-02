@@ -15,7 +15,17 @@ class _AboutScreenState extends State<AboutScreen>
   TabController tabController;
 
   static const String aboutHabba =
-      "Acharya Institutes has been a proud host of Habba since it's induction, in 2005. Every year is a celebration encapsulating the essence of talent borne by the entire campus. The 3-day mega event has achieved maximum success in all its realms by organising events like Battle of Bands, Fashion show, Acharya Premier League(APL), Acharya Football League(AFL) and music festival with an annual influx of 30,000 students. Habba'19 ensures to take you on yet another rollercoaster ride, let the thrill of the fest unfold in all its glory. ";
+      "Acharya Habba is the biggest techno-cultural fest in the city. This student run month long " +
+          "extravaganza begins with a bam and attracts a crowd of over 25000 from across the state. Over " +
+          "60 plus events under various categories brings the faculty and students together engaging " +
+          "them in celebratory interactions on the campus.\n\n" +
+          "The Jamboree reaches the scales of world class with the involvement of renowned National and " +
+          "International artists taking the stage; this is additionally a launch pad for budding talents " +
+          "to showcase.\n\nEvents like Acharya Premier League, Pro-Kabaddi, Acharya Football League, Music " +
+          "Festival, Ethnic day are a few prominent ones students look forward to participating.\n\n \"Simba\", " +
+          "the mascot of Habba grabs the limelight of all the events.\n\n" +
+          "This year Habba up-scales to 3 digit figures in number of events adding colour to the already " +
+          "magnificent.";
 
   @override
   void initState() {
@@ -101,9 +111,18 @@ class _AboutScreenState extends State<AboutScreen>
                 color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    aboutHabba,
-                    style: TextStyle(fontSize: 20),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Acharya Habba 2019', style: TextStyle(fontSize: 40), textAlign: TextAlign.center,),
+                      ),
+                      Divider(),
+                      Text(
+                        aboutHabba,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -186,6 +205,16 @@ class _AboutScreenState extends State<AboutScreen>
                               textAlign: TextAlign.center,
                             ),
                             children: <Widget>[
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Text(
+                                    dev.role,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
@@ -228,8 +257,7 @@ class _AboutScreenState extends State<AboutScreen>
                                       onPressed: () async {
                                         String phoneNumber =
                                             '91' + dev.phoneNumber;
-                                        String url =
-                                            "tel:$phoneNumber";
+                                        String url = "tel:$phoneNumber";
                                         if (await canLaunch(url)) {
                                           await launch(url);
                                         } else
@@ -253,7 +281,8 @@ class _AboutScreenState extends State<AboutScreen>
                                         style: TextStyle(color: Colors.black)),
                                     TextSpan(
                                       text: dev.technologies,
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(
+                                          color: Colors.black54, fontSize: 12),
                                     )
                                   ]),
                                 ),
@@ -269,7 +298,8 @@ class _AboutScreenState extends State<AboutScreen>
                                         style: TextStyle(color: Colors.black)),
                                     TextSpan(
                                       text: dev.about,
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(
+                                          color: Colors.black54, fontSize: 12),
                                     )
                                   ]),
                                 ),
@@ -314,7 +344,7 @@ class _AboutScreenState extends State<AboutScreen>
 }
 
 class Developer {
-  String name, phoneNumber, email, image, about, technologies;
+  String name, phoneNumber, email, image, about, technologies, role;
 
   Developer(
       {this.name,
@@ -322,46 +352,53 @@ class Developer {
       this.email,
       this.image,
       this.about,
-      this.technologies});
+      this.technologies,
+      this.role});
 }
 
 Developer ashwin = Developer(
     name: 'Ashwin Prasad A',
     phoneNumber: '9663574422',
+    role: 'App developer, Backend engineer, DevOps',
     email: 'ashwinxprasad@gmail.com',
     image: 'assets/ashwin.jpeg',
-    about: 'Hit or Miss. I guess they never miss huh (ISE Yikes)',
+    about: 'Hit or Miss. I guess they never miss huh (ISE Yikes!)',
     technologies: 'Flutter, React, NodeJS, ExpressJS, MySQL, MongoDB');
 Developer nikhil = Developer(
     name: 'Nikhil.N.Prem',
+    role: 'Backend engineer',
     phoneNumber: '9495571026',
     email: 'nikhilprem@rocketmail.com',
     image: 'assets/nikhil.jpeg',
-    about: 'Omae wa mou Shindeiru..... NANI?! (ISE Yikes)',
+    about: 'Aww that\'s hot. That\'s hot (ISE Yikes!)',
     technologies: 'React, NodeJS, ExpressJS, MySQL, MongoDB, Python');
 Developer bharath = Developer(
     name: 'Bharath Karanth',
+    role: 'Backend engineer',
     phoneNumber: '9481301702',
     email: 'bharathkaranth07@gmail.com',
     image: 'assets/bharath.jpeg',
     about: 'Programming is thinking. Not memorizing. (ISE Yikes)',
-    technologies: 'Nodejs, PHP,Web dev');
+    technologies: 'Nodejs, PHP, Web dev, MongoDB ,ExpressJS, MySQL, React');
 Developer shubham = Developer(
     name: 'Shubham Kumar Singh',
     phoneNumber: '7209369082',
+    role: 'Web developer, Backend engineer',
     email: 'shubham.beis.16@acharya.ac.in',
     image: 'assets/shubham.jpeg',
     about: 'Spending less and Investing More.',
     technologies: 'Design, React, NodeJS, PHP, Illustrator, Photoshop');
 Developer varshini = Developer(
     name: 'Varshini R',
+    role: 'Web developer',
     phoneNumber: '8317328816',
     email: 'varshini.beis.16@acharya.ac.in',
     image: 'assets/varshini.jpeg',
     about: 'Any pizza is a personal pizza if you believe in yourself',
-    technologies: 'Web dev, Python, Ethereal, Turbulent and Prospecting.');
+    technologies: 'Web dev, Python.');
 Developer rajan = Developer(
     name: 'Rajan Raj Das',
+    role: 'Web developer',
     phoneNumber: '6361500245',
     email: 'dasrajanraj@gmail.com',
     image: 'assets/rajan.jpeg',

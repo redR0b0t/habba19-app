@@ -115,7 +115,7 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
 
     Widget actual = DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFffffff).withOpacity(1.0),
       ),
       child: SizedBox(
         height: _kTabBarHeight + bottomPadding ,
@@ -152,7 +152,7 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
       child: DecoratedBox(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
-          child: actual,
+          child: Container(color: Colors.white,child: actual),
         ),
         decoration: BoxDecoration(
           boxShadow: [
